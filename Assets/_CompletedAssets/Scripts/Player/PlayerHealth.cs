@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using UnityEngine.SceneManagement;
 
 namespace CompleteProject
 {
@@ -98,13 +97,6 @@ namespace CompleteProject
             // Turn off the movement and shooting scripts.
             playerMovement.enabled = false;
             playerShooting.enabled = false;
-        }
-
-
-        public void RestartLevel ()
-        {
-            // Reload the level that is currently loaded.
-            SceneManager.LoadScene (0);
         }
     }
 }
