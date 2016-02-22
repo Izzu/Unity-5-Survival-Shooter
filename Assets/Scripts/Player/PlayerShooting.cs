@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerShooting : MonoBehaviour
 {
     public int damagePerShot = 20;
     public float timeBetweenBullets = 0.15f;
     public float range = 100f;
-
+    public Slider ammoSlider;
+    public static int ammo;
+    public Text ammoText;
 
     float timer;
     Ray shootRay;
@@ -25,6 +28,8 @@ public class PlayerShooting : MonoBehaviour
         gunLine = GetComponent <LineRenderer> ();
         gunAudio = GetComponent<AudioSource> ();
         gunLight = GetComponent<Light> ();
+        ammo = 20;
+        InvokeRepeating("Reload", 1, .5f);
     }
 
 
@@ -32,14 +37,24 @@ public class PlayerShooting : MonoBehaviour
     {
         timer += Time.deltaTime;
 
-		if(Input.GetButton ("Fire1") && timer >= timeBetweenBullets && Time.timeScale != 0)
+        if (Input.GetButton("Fire1") && timer >= timeBetweenBullets && Time.timeScale != 0 && ammo > 0)
         {
-            Shoot ();
+                Shoot();
         }
-
+        
         if(timer >= timeBetweenBullets * effectsDisplayTime)
         {
             DisableEffects ();
+        }    
+    }
+
+    void Reload()
+    {
+        if (ammo < 20 && !Input.GetButton("Fire1"))
+        {
+            ammo++;
+            ammoSlider.value = ammo;
+            ammoText.text = "Ammo: " + ammo + "/20";
         }
     }
 
@@ -53,6 +68,10 @@ public class PlayerShooting : MonoBehaviour
 
     void Shoot ()
     {
+        ammo = ammo - 1;
+        ammoSlider.value = ammo;
+        ammoText.text = "Ammo: " + ammo + "/20";
+
         timer = 0f;
 
         gunAudio.Play ();
