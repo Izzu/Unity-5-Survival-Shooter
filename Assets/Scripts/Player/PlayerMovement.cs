@@ -3,7 +3,9 @@
 public class PlayerMovement : MonoBehaviour
 {
     public float speed = 6f;
+    public float rotateSpeed = 3f;
     Vector3 movement;
+    Vector3 rotation;
     Animator anim;
     Rigidbody playerRigidbody;
     int floorMask;
@@ -19,7 +21,6 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         float rotate = Input.GetAxis("Horizontal");
-        //float h = Input.GetAxisRaw("Horizontal");
         float move = Input.GetAxisRaw("Vertical");
 
         Move(move);
@@ -31,23 +32,17 @@ public class PlayerMovement : MonoBehaviour
     {
         movement.Set(0f, 0f, move);
         movement = movement.normalized * speed * Time.deltaTime;
-        playerRigidbody.MovePosition(transform.position + movement);
+        //playerRigidbody.MovePosition(playerRigidbody.position + movement);
+        playerRigidbody.AddRelativeForce(Vector3.forward * move);
     }
 
     void Turning(float rotate)
     {
-        //Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //RaycastHit floorHit;
-
-        /*if(Physics.Raycast(camRay, out floorHit, camRayLength, floorMask))
-        {
-            Vector3 playerToMouse = floorHit.point - transform.position;
-            playerToMouse.y = 0f;
-
-            Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
-            playerRigidbody.MoveRotation(newRotation);
-        }*/
-        transform.Rotate(0, rotate, 0);
+        rotation.Set(0f, rotate, 0f);
+        rotation = rotation.normalized * rotateSpeed;
+        Quaternion rotated = Quaternion.Euler(rotation);
+        playerRigidbody.MoveRotation(playerRigidbody.rotation * rotated);
+        
     }
 
     void Animating(float h, float v)

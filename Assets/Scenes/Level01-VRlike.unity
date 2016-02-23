@@ -853,6 +853,14 @@ Prefab:
       propertyPath: reverbZoneMixCustomCurve.m_RotationOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5416832, guid: 247b4309d7088524cbc17af839cd1c65, type: 2}
+      propertyPath: m_Drag
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5416832, guid: 247b4309d7088524cbc17af839cd1c65, type: 2}
+      propertyPath: m_AngularDrag
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11491496, guid: 247b4309d7088524cbc17af839cd1c65, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 247b4309d7088524cbc17af839cd1c65, type: 2}
