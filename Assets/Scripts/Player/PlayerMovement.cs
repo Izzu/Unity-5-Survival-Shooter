@@ -18,34 +18,36 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
+        float rotate = Input.GetAxis("Horizontal");
+        //float h = Input.GetAxisRaw("Horizontal");
+        float move = Input.GetAxisRaw("Vertical");
 
-        Move(h, v);
-        Turning();
-        Animating(h, v);
+        Move(move);
+        Turning(rotate);
+        Animating(rotate, move);
     }
 
-    void Move(float h, float v)
+    void Move(float move)
     {
-        movement.Set(h, 0f, v);
+        movement.Set(0f, 0f, move);
         movement = movement.normalized * speed * Time.deltaTime;
         playerRigidbody.MovePosition(transform.position + movement);
     }
 
-    void Turning()
+    void Turning(float rotate)
     {
-        Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit floorHit;
+        //Ray camRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //RaycastHit floorHit;
 
-        if(Physics.Raycast(camRay, out floorHit, camRayLength, floorMask))
+        /*if(Physics.Raycast(camRay, out floorHit, camRayLength, floorMask))
         {
             Vector3 playerToMouse = floorHit.point - transform.position;
             playerToMouse.y = 0f;
 
             Quaternion newRotation = Quaternion.LookRotation(playerToMouse);
             playerRigidbody.MoveRotation(newRotation);
-        }
+        }*/
+        transform.Rotate(0, rotate, 0);
     }
 
     void Animating(float h, float v)
