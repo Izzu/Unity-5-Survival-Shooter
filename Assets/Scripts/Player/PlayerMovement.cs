@@ -32,8 +32,8 @@ public class PlayerMovement : MonoBehaviour
     {
         movement.Set(0f, 0f, move);
         movement = movement.normalized * speed * Time.deltaTime;
-        //playerRigidbody.MovePosition(playerRigidbody.position + movement);
-        playerRigidbody.AddRelativeForce(Vector3.forward * move);
+        movement = transform.TransformDirection(movement);
+        playerRigidbody.MovePosition(playerRigidbody.position + movement);
     }
 
     void Turning(float rotate)
