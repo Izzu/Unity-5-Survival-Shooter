@@ -46,7 +46,7 @@ public class ShootRay : MonoBehaviour
 
     void Shoot ()
     {
-        energy = energy - 0.1f;
+        energy = energy - 0.5f;
         energySlider.value = energy;
         energyText.text = "Energy: " + Mathf.RoundToInt(energy) + "/100";
         timer = 0f;
