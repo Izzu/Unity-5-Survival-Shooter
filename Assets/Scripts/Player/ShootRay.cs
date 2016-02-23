@@ -3,33 +3,33 @@ using UnityEngine.UI;
 
 public class ShootRay : MonoBehaviour
 {
-    public int damagePerShot = 20;
-    public float timeBetweenBullets = 0.15f;
-    public float range = 100f;
-    public Slider ammoSlider;
-    public static int ammo;
-    public Text ammoText;
+    //public int damagePerShot = 20;
+    //public float timeBetweenBullets = 0.15f;
+    //public float range = 100f;
+    public Slider energySlider;
+    public static float energy;
+    public Text energyText;
 
     float timer;
     Ray shootRay;
     RaycastHit shootHit;
     int shootableMask;
-    ParticleSystem gunParticles;
+    //ParticleSystem gunParticles;
     LineRenderer gunLine;
-    AudioSource gunAudio;
-    Light gunLight;
-    float effectsDisplayTime = 0.2f;
+    //AudioSource gunAudio;
+    //Light gunLight;
+    //float effectsDisplayTime = 0.2f;
 
 
     void Awake ()
     {
         shootableMask = LayerMask.GetMask ("Shootable");
-        gunParticles = GetComponent<ParticleSystem> ();
+        //gunParticles = GetComponent<ParticleSystem> ();
         gunLine = GetComponent <LineRenderer> ();
-        gunAudio = GetComponent<AudioSource> ();
-        gunLight = GetComponent<Light> ();
-        ammo = 20;
-        InvokeRepeating("Reload", 1, .5f);
+        //gunAudio = GetComponent<AudioSource> ();
+        //gunLight = GetComponent<Light> ();
+        energy = 100;
+        InvokeRepeating("Recharge", 1, .5f);
     }
 
 
@@ -37,49 +37,49 @@ public class ShootRay : MonoBehaviour
     {
         timer += Time.deltaTime;
 
-        if (Input.GetButton("Fire1") && timer >= timeBetweenBullets && Time.timeScale != 0 && ammo > 0)
+        if (Input.GetButton("Fire1") && energy > 0)
         {
                 Shoot();
         }
         
-        if(timer >= timeBetweenBullets * effectsDisplayTime)
+        /*if(timer >= timeBetweenBullets * effectsDisplayTime)
         {
             DisableEffects ();
-        }    
+        } */   
     }
 
-    void Reload()
+    void Recharge()
     {
-        if (ammo < 20 && !Input.GetButton("Fire1"))
+        if (energy < 20 && !Input.GetButton("Fire1"))
         {
-            ammo++;
-            ammoSlider.value = ammo;
-            ammoText.text = "Ammo: " + ammo + "/20";
+            energy = energy + 1f;
+            energySlider.value = energy;
+            energyText.text = "Energy: " + Mathf.RoundToInt(energy) + "/100";
         }
     }
 
 
-    public void DisableEffects ()
+    /*public void DisableEffects ()
     {
         gunLine.enabled = false;
         gunLight.enabled = false;
-    }
+    }*/
 
 
     void Shoot ()
     {
-        ammo = ammo - 1;
-        ammoSlider.value = ammo;
-        ammoText.text = "Ammo: " + ammo + "/20";
+        energy = energy - 0.1f;
+        energySlider.value = energy;
+        energyText.text = "Energy: " + Mathf.RoundToInt(energy) + "/100";
 
         timer = 0f;
 
-        gunAudio.Play ();
+        //gunAudio.Play ();
 
-        gunLight.enabled = true;
+        //gunLight.enabled = true;
 
-        gunParticles.Stop ();
-        gunParticles.Play ();
+        //gunParticles.Stop ();
+        //gunParticles.Play ();
 
         gunLine.enabled = true;
         gunLine.SetPosition (0, transform.position);
@@ -87,18 +87,23 @@ public class ShootRay : MonoBehaviour
         shootRay.origin = transform.position;
         shootRay.direction = transform.forward;
 
-        if(Physics.Raycast (shootRay, out shootHit, range, shootableMask))
+        if(Physics.Raycast (shootRay, out shootHit, shootableMask))
         {
-            EnemyHealth enemyHealth = shootHit.collider.GetComponent <EnemyHealth> ();
-            if(enemyHealth != null)
+            //EnemyHealth enemyHealth = shootHit.collider.GetComponent <EnemyHealth> ();
+            /*if(enemyHealth != null)
             {
                 enemyHealth.TakeDamage (damagePerShot, shootHit.point);
+            }*/
+            if(shootHit.collider.gameObject.tag == "Moveable")
+            {
+                 //shootHit.transform = shootRay.GetPoint;
             }
-            gunLine.SetPosition (1, shootHit.point);
+
+            //gunLine.SetPosition (1, shootHit.point);
         }
-        else
+        /*else
         {
             gunLine.SetPosition (1, shootRay.origin + shootRay.direction * range);
-        }
+        }*/
     }
 }
