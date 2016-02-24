@@ -1026,6 +1026,7 @@ MonoBehaviour:
   energySlider: {fileID: 1340610852}
   energyText: {fileID: 661591771}
   range: 1000
+  player: {fileID: 431988189}
 --- !u!120 &1589798663
 LineRenderer:
   m_ObjectHideFlags: 0
