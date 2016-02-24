@@ -6,7 +6,7 @@ public class ShootRay : MonoBehaviour
     public Slider energySlider;
     public static float energy;
     public Text energyText;
-
+    public float range = 1000f;
     float timer;
     Ray shootRay;
     RaycastHit shootHit;
@@ -25,11 +25,17 @@ public class ShootRay : MonoBehaviour
 
     void Update ()
     {
-        timer += Time.deltaTime;
+        shootRay.origin = transform.position;
+        shootRay.direction = transform.forward;
 
-        if (Input.GetButton("Fire1") && energy > 0)
+        if (Physics.Raycast(shootRay, out shootHit, range, shootableMask))
         {
+            gunLine.SetPosition(0, transform.position);
+            gunLine.SetPosition(1, shootHit.point);
+            if (Input.GetButton("Fire1") && energy > 0)
+            {
                 Shoot();
+            }
         }
     }
 
@@ -44,25 +50,20 @@ public class ShootRay : MonoBehaviour
     }
 
 
-    void Shoot ()
+    void Shoot()
     {
         energy = energy - 0.5f;
         energySlider.value = energy;
         energyText.text = "Energy: " + Mathf.RoundToInt(energy) + "/100";
-        timer = 0f;
 
-        gunLine.enabled = true;
-        gunLine.SetPosition (0, transform.position);
-
-        shootRay.origin = transform.position;
-        shootRay.direction = transform.forward;
-
-        if(Physics.Raycast (shootRay, out shootHit, shootableMask))
+        /*if (Physics.Raycast(shootRay, out shootHit, Mathf.Infinity, shootableMask))
         {
-            if(shootHit.collider.gameObject.tag == "Moveable")
-            {
-                 //shootHit.transform = shootRay.GetPoint;
-            }
+            ///EnemyHealth enemyHealth = shootHit.collider.GetComponent<EnemyHealth>();
+            gunLine.SetPosition(1, shootHit.point);
         }
+        else
+        {
+            gunLine.SetPosition(1, shootRay.origin + shootRay.direction * range);
+        }*/
     }
 }
