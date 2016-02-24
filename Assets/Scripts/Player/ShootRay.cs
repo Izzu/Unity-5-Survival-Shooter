@@ -12,6 +12,7 @@ public class ShootRay : MonoBehaviour
     RaycastHit shootHit;
     int moveableMask;
     LineRenderer gunLine;
+    public GameObject player;
 
 
     void Awake ()
@@ -34,6 +35,7 @@ public class ShootRay : MonoBehaviour
             gunLine.SetPosition(1, shootHit.point);
             if (Input.GetButton("Fire1") && energy > 0)
             {
+                shootHit.transform.parent = player.transform;
                 shootHit.transform.position = shootHit.point;
                 Shoot();
             }
