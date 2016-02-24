@@ -6,7 +6,7 @@ public class ShootRay : MonoBehaviour
     public Slider energySlider;
     public static float energy;
     public Text energyText;
-    public float range = 1000f;
+    public float range = 100f;
     float timer;
     Ray shootRay;
     RaycastHit shootHit;
@@ -25,9 +25,9 @@ public class ShootRay : MonoBehaviour
 
     void Update ()
     {
-        shootRay.origin = transform.position;
-        shootRay.direction = transform.forward;
-
+        //shootRay.origin = transform.position;
+        //shootRay.direction = transform.forward;
+        shootRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(shootRay, out shootHit, range, moveableMask))
         {
             gunLine.SetPosition(0, transform.position);
