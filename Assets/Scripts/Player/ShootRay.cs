@@ -10,13 +10,13 @@ public class ShootRay : MonoBehaviour
     float timer;
     Ray shootRay;
     RaycastHit shootHit;
-    int shootableMask;
+    int moveableMask;
     LineRenderer gunLine;
 
 
     void Awake ()
     {
-        shootableMask = LayerMask.GetMask ("Shootable");
+        moveableMask = LayerMask.GetMask ("Moveable");
         gunLine = GetComponent <LineRenderer> ();
         energy = 100;
         InvokeRepeating("Recharge", 1, .5f);
@@ -28,14 +28,17 @@ public class ShootRay : MonoBehaviour
         shootRay.origin = transform.position;
         shootRay.direction = transform.forward;
 
-        if (Physics.Raycast(shootRay, out shootHit, range, shootableMask))
+        if (Physics.Raycast(shootRay, out shootHit, range, moveableMask))
         {
             gunLine.SetPosition(0, transform.position);
             gunLine.SetPosition(1, shootHit.point);
             if (Input.GetButton("Fire1") && energy > 0)
             {
+                shootHit.transform.position = shootHit.point;
                 Shoot();
             }
+            else
+                Recharge();
         }
     }
 
@@ -55,15 +58,5 @@ public class ShootRay : MonoBehaviour
         energy = energy - 0.5f;
         energySlider.value = energy;
         energyText.text = "Energy: " + Mathf.RoundToInt(energy) + "/100";
-
-        /*if (Physics.Raycast(shootRay, out shootHit, Mathf.Infinity, shootableMask))
-        {
-            ///EnemyHealth enemyHealth = shootHit.collider.GetComponent<EnemyHealth>();
-            gunLine.SetPosition(1, shootHit.point);
-        }
-        else
-        {
-            gunLine.SetPosition(1, shootRay.origin + shootRay.direction * range);
-        }*/
     }
 }
