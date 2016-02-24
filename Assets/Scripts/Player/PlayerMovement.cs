@@ -3,7 +3,7 @@
 public class PlayerMovement : MonoBehaviour
 {
     public float speed = 6f;
-    public float rotateSpeed = 3f;
+    public float rotateSpeed = 0.0005f;
     Vector3 movement;
     Vector3 rotation;
     Animator anim;
