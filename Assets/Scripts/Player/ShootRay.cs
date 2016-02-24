@@ -10,15 +10,18 @@ public class ShootRay : MonoBehaviour
     float timer;
     Ray shootRay;
     RaycastHit shootHit;
-    int moveableMask;
+    //int moveableMask;
+    int shootableMask;
     LineRenderer gunLine;
     public GameObject player;
     private Color startColor;
+    private GameObject anObject;
 
 
     void Awake ()
     {
-        moveableMask = LayerMask.GetMask ("Moveable");
+        //moveableMask = LayerMask.GetMask ("Moveable");
+        shootableMask = LayerMask.GetMask("Shootable");
         gunLine = GetComponent <LineRenderer> ();
         energy = 100;
         InvokeRepeating("Recharge", 1, .5f);
@@ -27,30 +30,53 @@ public class ShootRay : MonoBehaviour
 
     void Update ()
     {
-        shootRay.origin = transform.position;
-        shootRay.direction = transform.forward;
-        //shootRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(shootRay, out shootHit, range, moveableMask))
+        //shootRay.origin = transform.position;
+        //shootRay.direction = transform.forward;
+               
+        if (Input.GetButton("Fire1"))
         {
-            GameObject anObject = shootHit.collider.gameObject;
+            shootRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            gunLine.enabled = true;
             gunLine.SetPosition(0, transform.position);
-            gunLine.SetPosition(1, shootHit.point);
-            Highlight(anObject);
+            Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            
+            if (Physics.Raycast(shootRay, out shootHit, range, shootableMask))
+            {
+                gunLine.SetColors(Color.cyan, Color.cyan);
+                gunLine.material.color = Color.cyan;
+                anObject = shootHit.collider.gameObject;
+                gunLine.SetPosition(1, shootHit.point);
 
-            if (Input.GetButton("Fire1") && energy > 0)
-            {
-                shootHit.transform.parent = player.transform;
-                //shootHit.transform.position = new Vector3(Input.mousePosition.x, 0f, 0f);
-                //shootHit.transform.position = shootHit.point;
-                Shoot();
+                //Vector3 mousePoint = Camera.main.WorldToScreenPoint(shootHit.transform.position);
+                //Vector3 offset = shootHit.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, mousePoint.z));
+
+                if (energy > 0 && shootHit.collider.tag == "Moveable")
+                {
+                    HighlightGreen(anObject);
+                    //Vector3 currScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, mousePoint.z);
+                    //Vector3 currPos = Camera.main.ScreenToWorldPoint(currScreenPoint);
+                    //shootHit.transform.position = currPos;
+                    
+                    shootHit.transform.parent = player.transform;
+                    //shootHit.transform.position = Vector3.Lerp(shootHit.transform.position, new Vector3(pos.x, pos.y, shootHit.transform.position.z), 0.5f * Time.deltaTime);
+                    Shoot();
+                }
+                else if (energy > 0)
+                {
+                    gunLine.SetColors(Color.red, Color.red);
+                    gunLine.material.color = Color.red;
+                    HighlightRed(anObject);
+                    Shoot();
+                }
             }
-            else
-            {
-                anObject.transform.parent = null;
-                unHighlight(anObject);
-                Recharge();
-            }
-        }            
+        }
+        else
+        {
+            gunLine.enabled = false;
+            anObject.transform.parent = null;
+            unHighlight(anObject);
+            Recharge();
+        }
     }
 
     void Recharge()
@@ -71,18 +97,27 @@ public class ShootRay : MonoBehaviour
         energyText.text = "Energy: " + Mathf.RoundToInt(energy) + "/100";
     }
 
-    void Highlight(GameObject anObject)
+    void HighlightGreen(GameObject anObject)
     {
-        if(anObject.GetComponent<Light>() == null)
-            anObject.AddComponent<Light>();
-        //startColor = anObject.GetComponent<Renderer>().material.color;
-        //anObject.GetComponent<Renderer>().material.color = Color.yellow;
+        if (anObject.GetComponent<Light>() == null)
+        {
+            Light aLight = anObject.AddComponent<Light>();
+            aLight.color = Color.cyan;
+        }
+    }
+
+    void HighlightRed(GameObject anObject)
+    {
+        if (anObject.GetComponent<Light>() == null)
+        {
+            Light aLight = anObject.AddComponent<Light>();
+            aLight.color = Color.red;
+        }
     }
 
     void unHighlight(GameObject anObject)
     {
         if(anObject.GetComponent<Light>() != null)
             Destroy(anObject.GetComponent<Light>());
-        //anObject.GetComponent<Renderer>().material.color = Color.black;
     }
 }
